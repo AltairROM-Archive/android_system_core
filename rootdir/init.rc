@@ -858,6 +858,14 @@ on boot
     write /proc/sys/vm/dirty_expire_centisecs 200
     write /proc/sys/vm/dirty_background_ratio  5
 
+    # to access F2FS sysfs on dm-<num> directly
+    mkdir /dev/sys/fs/by-name 0755 system system
+    symlink /sys/fs/f2fs/${dev.mnt.dev.data} /dev/sys/fs/by-name/userdata
+
+    # to access dm-<num> sysfs
+    mkdir /dev/sys/block/by-name 0755 system system
+    symlink /sys/devices/virtual/block/${dev.mnt.dev.data} /dev/sys/block/by-name/userdata
+
     # F2FS tuning. Set cp_interval larger than dirty_expire_centisecs
     # to avoid power consumption when system becomes mostly idle. Be careful
     # to make it too large, since it may bring userdata loss, if they
